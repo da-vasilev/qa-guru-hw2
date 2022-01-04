@@ -2,9 +2,7 @@ package com.severstal.pages;
 
 import com.severstal.TestData;
 
-import java.io.File;
-
-import static com.codeborne.selenide.Condition.appear;
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -22,7 +20,7 @@ public class PracticeFormPage {
         $("#firstName").setValue(testData.getFirstName());
         $("#lastName").setValue(testData.getLastName());
         $("#userEmail").setValue(testData.getUserEmail());
-        $x("//label[contains(., 'Male')]").click();
+        $(byText("Male")).click();
         $("#userNumber").setValue(testData.getUserNumber());
         $("#dateOfBirthInput").click();
         $(".react-datepicker__month-select").selectOption(testData.getDateOfBirth()[1]);
@@ -30,7 +28,7 @@ public class PracticeFormPage {
         $(String.format(".react-datepicker__day--0%s", testData.getDateOfBirth()[0])).click();
         $("#subjectsInput").setValue("English").pressEnter();
         $x("//label[contains(., 'Sports')]").click();
-        $("#uploadPicture").uploadFile(new File("src/test/resources/starPhoto.jpg"));
+        $("#uploadPicture").uploadFromClasspath("starPhoto.jpg");
         $("#currentAddress").setValue(testData.getCurrentAddress());
         $("#state #react-select-3-input").setValue("NCR").pressEnter();
         $("#city #react-select-4-input").setValue("Delhi").pressEnter();
@@ -44,20 +42,22 @@ public class PracticeFormPage {
      * @return this
      */
     public PracticeFormPage checkStudentRegistrationForm(TestData testData) {
-        $(byText("Thanks for submitting the form")).should(appear);
-        $(byText(String.format("%s %s", testData.getFirstName(), testData.getLastName()))).should(appear);
-        $(byText(testData.getUserEmail())).should(appear);
-        $(byText("Male")).should(appear);
-        $(byText(testData.getUserNumber())).should(appear);
-        $(byText(String.format("%s %s,%s",
-                testData.getDateOfBirth()[0],
-                testData.getDateOfBirth()[1],
-                testData.getDateOfBirth()[2]))).should(appear);
-        $(byText("English")).should(appear);
-        $(byText("Sports")).should(appear);
-        $(byText("starPhoto.jpg")).should(appear);
-        $(byText(testData.getCurrentAddress())).should(appear);
-        $(byText("NCR Delhi")).should(appear);
+        $(".table").shouldHave(
+                text("Thanks for submitting the form"),
+                text(String.format("%s %s", testData.getFirstName(), testData.getLastName())),
+                text(testData.getUserEmail()),
+                text("Male"),
+                text(testData.getUserNumber()),
+                text(String.format("%s %s,%s",
+                        testData.getDateOfBirth()[0],
+                        testData.getDateOfBirth()[1],
+                        testData.getDateOfBirth()[2])),
+                text("English"),
+                text("Sports"),
+                text("starPhoto.jpg"),
+                text(testData.getCurrentAddress()),
+                text("NCR Delhi")
+        );
         return this;
     }
 }
